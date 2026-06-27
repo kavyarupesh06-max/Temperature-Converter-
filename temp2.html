@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperature Converter App</title>
+    <style>
+        body {
+            margin: 0;
+            font-family:'Times New Roman', Times, serif;
+            background: linear-gradient(to right, #75bfff, #ff7eb3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        #landing {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #060000cd;
+            text-align: center;
+            transition: all 0.8s ease;
+            z-index: 2;
+        }
+
+        #landing.hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+
+        #landing h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 5px rgba(148, 146, 146, 0.501);
+        }
+
+        #landing p {
+            font-size: 1.2em;
+            margin-bottom: 40px;
+        }
+
+        .get-started {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            color: #fff;
+            background: linear-gradient(45deg, #6C63FF, #8A2BE2);
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.532);
+            text-decoration: none;
+        }
+
+        .get-started:hover {
+            transform: translateY(-3px);
+            background:white;
+            color: black;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            
+        }
+
+        #converter {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to right, #75bfff, #ff7eb3);
+            transition: all 0.8s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #converter.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .converter-box {
+            background: linear-gradient(to bottom, #ffffffdd, #e0f7fa);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            width: 400px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .converter-box:hover {
+            transform: scale(1.05);
+        }
+
+        .converter-box h1 {
+            margin-bottom: 25px;
+            font-size: 2em;
+            color: #333;
+            text-shadow: 1px 1px 2px #fff;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .input-group input, .input-group select {
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            border-color: #6C63FF;
+            box-shadow: 0 0 8px rgba(108, 99, 255, 0.5);
+            outline: none;
+        }
+
+        .convert-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #6C63FF, #8A2BE2);
+            color: #fff;
+            font-size: 18px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .convert-btn:hover {
+            background:white;
+            color: black;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            color: #fff;
+        }
+
+        .cold { background: linear-gradient(90deg, #00c6ff, #0072ff); }
+        .moderate { background: linear-gradient(90deg, #00ff88, #00c851); }
+        .warm { background: linear-gradient(90deg, #ffbb33, #ff8800); }
+        .hot { background: linear-gradient(90deg, #ff4444, #cc0000); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="landing">
+            <h1>Welcome to Temperature Converter</h1>
+            <p>Convert temperatures between Celsius, Fahrenheit, and Kelvin easily!</p>
+            <button class="get-started" onclick="showConverter()">Get Started</button>
+        </div>
+
+        <div id="converter">
+            <div class="converter-box">
+                <h1>Temperature Converter</h1>
+                <div class="input-group">
+                    <label for="temp">Enter Temperature:</label>
+                    <input type="number" id="temp" placeholder="Enter value">
+                </div>
+                <div class="input-group">
+                    <label for="fromUnit">From:</label>
+                    <select id="fromUnit">
+                        <option value="C">Celsius (°C)</option>
+                        <option value="F">Fahrenheit (°F)</option>
+                        <option value="K">Kelvin (K)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="toUnit">To:</label>
+                    <select id="toUnit">
+                        <option value="C">Celsius (°C)</option>
+                        <option value="F">Fahrenheit (°F)</option>
+                        <option value="K">Kelvin (K)</option>
+                    </select>
+                </div>
+                <button class="convert-btn" onclick="convertTemperature()">Convert</button>
+                <div class="result" id="result">Result will appear here</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showConverter() {
+            document.getElementById('landing').classList.add('hidden');
+            document.getElementById('converter').classList.add('active');
+        }
+
+        function convertTemperature() {
+            let temp = parseFloat(document.getElementById('temp').value);
+            let fromUnit = document.getElementById('fromUnit').value;
+            let toUnit = document.getElementById('toUnit').value;
+            const resultDiv = document.getElementById('result');
+
+            if (isNaN(temp)) {
+                resultDiv.innerText = "Please enter a valid number!";
+                resultDiv.className = 'result moderate';
+                return;
+            }
+
+            let celsius;
+            switch(fromUnit) {
+                case "C": celsius = temp; break;
+                case "F": celsius = (temp - 32) * 5/9; break;
+                case "K": celsius = temp - 273.15; break;
+            }
+
+            let result;
+            switch(toUnit) {
+                case "C": result = celsius; break;
+                case "F": result = (celsius * 9/5) + 32; break;
+                case "K": result = celsius + 273.15; break;
+            }
+
+            let tempClass;
+            if (celsius <= 0) tempClass = 'cold';
+            else if (celsius > 0 && celsius <= 25) tempClass = 'moderate';
+            else if (celsius > 25 && celsius <= 40) tempClass = 'warm';
+            else tempClass = 'hot';
+
+            resultDiv.innerText = `${temp} ${fromUnit} = ${result.toFixed(2)} ${toUnit}`;
+            resultDiv.className = `result ${tempClass}`;
+        }
+    </script>
+</body>
+</html>
